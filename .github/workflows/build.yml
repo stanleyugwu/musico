@@ -1,0 +1,41 @@
+name: Build App Android
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout to the pull request head branch
+        uses: actions/checkout@v2
+
+      # Gradle Cache https://github.com/actions/cache/blob/main/examples.md#java---gradle
+      - name: Cache Gradle files
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle
+
+      - name: Install app Node.js dependencies
+        run: yarn install
+
+      - name: Add 'executable' permission for gradlew script
+        run: chmod +x ./gradlew
+        working-directory: android
+
+      - name: Build android app (.aab & .apk)
+        run: ./gradlew bundleRelease assembleRelease
+        working-directory: android
+
+      - name: Upload generated apk
+      uses: actions/upload-artifact@v3
+      with:
+        name: release apk
+        path: app/build/outputs/apk/release/
