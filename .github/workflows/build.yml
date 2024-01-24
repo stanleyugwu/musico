@@ -42,8 +42,7 @@ jobs:
 
       - name: Upload generated 
         uses: actions/upload-artifact@v3
-        working-directory: android
         with:
           name: musico
           path: |
-            ./app/build/outputs/apk/release/*.apk
+            ~/**/app/build/outputs/apk/release/*.apk
