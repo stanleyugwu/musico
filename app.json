@@ -5,12 +5,16 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "musico",
+    "androidStatusBar": {
+      "barStyle": "light-content"
+    },
     "userInterfaceStyle": "automatic",
+    "backgroundColor": "#00000000",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#632C46"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -21,8 +25,9 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "backgroundColor": "#632C46"
+      },
+      "package": "com.devvie.musico"
     },
     "web": {
       "bundler": "metro",
@@ -34,6 +39,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "8608ca11-51dc-4edb-8d9c-72b7976f027b"
+      }
     }
   }
 }

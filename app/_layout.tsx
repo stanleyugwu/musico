@@ -1,28 +1,38 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-
-import { useColorScheme } from '@/components/useColorScheme';
+import Text from "@/components/Text";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { Theme, ThemeProvider } from "@react-navigation/native";
+import { useFonts } from "expo-font";
+import { Stack, router } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+import { View, ViewProps } from "react-native";
 
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
-} from 'expo-router';
-
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
-};
+} from "expo-router";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
+const CustomFonts = {
+  Roboto: require("../assets/fonts/Roboto/Roboto-Regular.ttf"),
+  InterBlack: require("../assets/fonts/Inter/static/Inter-Black.ttf"),
+  InterBold: require("../assets/fonts/Inter/static/Inter-Bold.ttf"),
+  InterExtraBold: require("../assets/fonts/Inter/static/Inter-ExtraBold.ttf"),
+  InterExtraLight: require("../assets/fonts/Inter/static/Inter-ExtraLight.ttf"),
+  InterLight: require("../assets/fonts/Inter/static/Inter-Light.ttf"),
+  InterMedium: require("../assets/fonts/Inter/static/Inter-Medium.ttf"),
+  InterRegular: require("../assets/fonts/Inter/static/Inter-Regular.ttf"),
+  InterSemiBold: require("../assets/fonts/Inter/static/Inter-SemiBold.ttf"),
+  InterThin: require("../assets/fonts/Inter/static/Inter-Thin.ttf"),
+};
+
+export type FontFamily = keyof typeof CustomFonts;
+
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    ...CustomFonts,
     ...FontAwesome.font,
   });
 
@@ -44,15 +54,63 @@ export default function RootLayout() {
   return <RootLayoutNav />;
 }
 
-function RootLayoutNav() {
-  const colorScheme = useColorScheme();
+const DefaultTheme: Theme = {
+  dark: false,
+  colors: {
+    primary: "#632C46",
+    background: "#632C46",
+    card: "white",
+    text: "white",
+    border: "rgb(216, 216, 216)",
+    notification: "rgb(255, 59, 48)",
+  },
+};
 
+interface HeaderProps extends ViewProps {
+  onBackPress?: () => void;
+  label?: string;
+  headerRight?: React.ReactNode;
+}
+
+export const Header = ({
+  headerRight,
+  style,
+  label,
+  onBackPress,
+  ...otherProps
+}: HeaderProps) => {
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
+    <View
+      style={[
+        {
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        },
+        style,
+      ]}
+      {...otherProps}
+    >
+      <FontAwesome
+        onPress={onBackPress ? onBackPress : router.back}
+        name="angle-left"
+        size={40}
+        color={"white"}
+      />
+      {label && (
+        <Text font="InterBold" size={20} color="white">
+          {label}
+        </Text>
+      )}
+      {headerRight && headerRight}
+    </View>
+  );
+};
+
+function RootLayoutNav() {
+  return (
+    <ThemeProvider value={DefaultTheme}>
+      <Stack screenOptions={{ headerShown: false }} initialRouteName="home" />
     </ThemeProvider>
   );
 }
