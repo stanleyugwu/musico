@@ -1,4 +1,4 @@
-name: Build App Android
+name: Build App
 on:
   push:
     branches:
@@ -34,8 +34,8 @@ jobs:
         run: ./gradlew bundleRelease assembleRelease
         working-directory: android
 
-      - name: Upload generated apk
-      uses: actions/upload-artifact@v3
-      with:
-        name: release apk
-        path: app/build/outputs/apk/release/
+      - name: Upload generated 
+        uses: actions/upload-artifact@v3
+        with:
+          name: musico
+          path: app/build/outputs/apk/release/
